@@ -1,6 +1,5 @@
 // PROVIDED CODE BELOW (LINES 1 - 80) DO NOT REMOVE
 
-// The store will hold all information needed globally
 let store = {
 	track_id: undefined,
 	track_name: undefined,
@@ -9,7 +8,6 @@ let store = {
 	race_id: undefined,
 }
 
-// We need our javascript to wait until the DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
 	onPageLoad()
 	setupClickHandlers()
@@ -35,29 +33,24 @@ function setupClickHandlers() {
 	document.addEventListener('click', function (event) {
 		const { target } = event;
 
-		// Race track form field
 		if (target.matches('.card.track')) {
 			handleSelectTrack(target);
 			store.track_id = target.id;
 			store.track_name = target.innerHTML;
 		}
 
-		// Racer form field
 		if (target.matches('.card.racer')) {
 			handleSelectRacer(target);
 			store.player_id = target.id;
 			store.player_name = target.innerHTML;
 		}
 
-		// Submit create race form
 		if (target.matches('#submit-create-race')) {
 			event.preventDefault();
 
-			// start race
 			handleCreateRace();
 		}
 
-		// Handle acceleration click
 		if (target.matches('#gas-peddle')) {
 			handleAccelerate(store.race_id);
 		}
@@ -77,27 +70,20 @@ async function delay(ms) {
 async function handleCreateRace() {
 	console.log("in create race");
 
-	// render starting UI
 	renderAt('#race', renderRaceStartView(store.track_name));
 
-	// Get player_id and track_id from the store
 	const player_id = store.player_id;
 	const track_id = store.track_id;
 	console.log(`The player ID : ${player_id}, and the track ID : ${track_id}`);
 
-	// Call the asynchronous method createRace
-	const race = await createRace(player_id, track_id); // returns an object with race data
+	const race = await createRace(player_id, track_id); 
 
-	// Update the store with the race id in the response
 	store.race_id = race.ID;
 
-	// The race has been created, now start the countdown
 	await runCountdown();
 
-	// Call the async function startRace
 	await startRace(store.race_id);
 
-	// Call the async function runRace
 	runRace(store.race_id);
 }
 
@@ -111,9 +97,8 @@ async function runRace(raceID) {
 				if (res.status === "in-progress") {
 					renderAt("#leaderBoard", raceProgress(res.positions));
 
-					// Check if the current player is in the first position
 					const playerPosition = res.positions.findIndex(p => p.id === parseInt(store.player_id));
-					if (playerPosition === 0) { // If the player is in the first position
+					if (playerPosition === 0) { 
 						clearInterval(raceInfo);
 						renderAt("#race", resultsView(res.positions));
 						resolve(res);
@@ -149,32 +134,27 @@ async function runCountdown() {
 function handleSelectRacer(target) {
 	console.log("selected a racer", target.id);
 
-	// remove class selected from all racer options
 	const selected = document.querySelector('#racers .selected');
 	if (selected) {
 		selected.classList.remove('selected');
 	}
 
-	// add class selected to current target
 	target.classList.add('selected');
 }
 
 function handleSelectTrack(target) {
 	console.log("selected track", target.id);
 
-	// remove class selected from all track options
 	const selected = document.querySelector('#tracks .selected');
 	if (selected) {
 		selected.classList.remove('selected');
 	}
 
-	// add class selected to current target
 	target.classList.add('selected');
 }
 
 function handleAccelerate(id) {
 	console.log("accelerate button clicked");
-	// Invoke the API call to accelerate
 	accelerate(id);
 }
 
