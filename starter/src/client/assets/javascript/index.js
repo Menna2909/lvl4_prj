@@ -97,12 +97,12 @@ async function runRace(raceID) {
 				if (res.status === "in-progress") {
 					renderAt("#leaderBoard", raceProgress(res.positions));
 
-					const playerPosition = res.positions.findIndex(p => p.id === parseInt(store.player_id));
-					if (playerPosition === 0) { 
-						clearInterval(raceInfo);
-						renderAt("#race", resultsView(res.positions));
-						resolve(res);
-					}
+					// const playerPosition = res.positions.findIndex(p => p.id === parseInt(store.player_id));
+					// if (playerPosition === 0) { 
+					// 	clearInterval(raceInfo);
+					// 	renderAt("#race", resultsView(res.positions));
+					// 	resolve(res);
+					// }
 				} else if (res.status === "finished") {
 					clearInterval(raceInfo);
 					renderAt("#race", resultsView(res.positions));
